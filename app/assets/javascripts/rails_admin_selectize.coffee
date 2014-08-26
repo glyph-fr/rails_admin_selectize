@@ -57,5 +57,5 @@ class RailsAdminSelectize
       $.each data, (i, item) => @el.selectize.addItem(item.value)
 
 
-$ ->
+$(document).on "rails_admin.dom_ready", ->
   $('[data-selectize]').each (i, el) -> new RailsAdminSelectize($(el))
