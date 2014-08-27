@@ -37,7 +37,13 @@ module RailsAdmin
         register_instance_option :search_url do
           parent_model_name = bindings[:object].class.name
           action = bindings[:controller].params[:action]
-          "/rails-admin-selectize/search/#{ parent_model_name }/#{ method_name }/#{ action }"
+
+          [
+            '/rails-admin-selectize/search',
+            parent_model_name,
+            method_name,
+            action
+          ].join('/')
         end
 
         register_instance_option :search_limit do

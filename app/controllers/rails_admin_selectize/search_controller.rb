@@ -18,10 +18,10 @@ module RailsAdminSelectize
 
     def field_config
       @field_config ||= begin
-        model_name = params[:parent_model_name].to_sym
-        parent_config = RailsAdmin::Config.registry[model_name].abstract_model.config
+        registered = RailsAdmin::Config.registry[parent_model_name]
+        parent_config = registered.abstract_model.config
 
-        config = parent_config.send(params[:parent_action]).fields.find do |field|
+        config = parent_config.send(config_section).fields.find do |field|
           field.name == field_name
         end
 
@@ -43,6 +43,21 @@ module RailsAdminSelectize
 
     def parent_model
       @parent_model ||= params[:parent_model_name].constantize
+    end
+
+    def parent_model_name
+      @parent_model_name ||= params[:parent_model_name].to_sym
+    end
+
+    def config_section
+      registered = RailsAdmin.config.registry[parent_model_name]
+      config = registered.abstract_model.config
+
+      section = if config.respond_to?(params[:parent_action])
+        params[:parent_action]
+      else
+        :edit
+      end
     end
   end
 end
