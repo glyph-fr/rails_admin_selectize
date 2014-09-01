@@ -82,6 +82,10 @@ module RailsAdmin
           end
         end
 
+        def field_value
+          form_value.map { |item| item.send(search_value_field) }.join(',')
+        end
+
         def serialized_value
           form_value.map do |item|
             {

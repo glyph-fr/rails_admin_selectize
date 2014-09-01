@@ -1,2 +1,2 @@
 .controls
-  = form.send field.view_helper, field.field_name, field.html_attributes.reverse_merge({ value: nil, data: { selectize: true, :'search-url' => field.search_url, value: field.serialized_value, :'search-param' => field.search_param, :'preload' => field.preload } })
+  = form.send field.view_helper, field.field_name, field.html_attributes.reverse_merge({ value: field.field_value, data: { selectize: true, :'search-url' => field.search_url, value: field.serialized_value, :'search-param' => field.search_param, :'preload' => field.preload } })
