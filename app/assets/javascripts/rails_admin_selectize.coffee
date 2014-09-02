@@ -4,6 +4,8 @@ class RailsAdminSelectize
     @el = @$el[0]
 
     @preload = @$el.data('preload')
+    creatable = @$el.data('creatable')
+    addTranslation = @$el.data('add-translation')
 
     @$el.val('')
 
@@ -14,6 +16,14 @@ class RailsAdminSelectize
       preload: if @preload then 'focus' else false
       sortField: 'text'
       plugins: ['remove_button']
+      create: creatable
+      render:
+        option_create: (data) ->
+          """
+            <div class="create" data-selectable="">
+              #{ addTranslation } <strong>#{ data.input }</strong>...
+            </div>
+          """
     )
 
     if (value = @$el.data('value'))

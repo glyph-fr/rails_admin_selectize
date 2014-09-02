@@ -26,6 +26,10 @@ module RailsAdmin
           {}
         end
 
+        register_instance_option :creatable do
+          false
+        end
+
         register_instance_option :partial do
           :form_selectize
         end
