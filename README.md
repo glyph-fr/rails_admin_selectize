@@ -57,6 +57,9 @@ rails_admin
     relation_name :categories
     # Allows hiding the field
     visible? true
+    # Allows creating items as tags : Will prompt "Add xxx..." when typing a
+    # text that isn't in the search results
+    creatable false
     # Defines the key used in the field [name] attribute
     field_name :category_ids
     # The URL to search the associated data in. It is generated dynamically and
