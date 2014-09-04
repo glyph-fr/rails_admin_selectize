@@ -1,7 +1,5 @@
 class RailsAdminSelectize
   constructor: (@$el) ->
-    console.log('FOOOOO', @$el)
-
     @single = false
     @el = @$el[0]
 
