@@ -1,5 +1,7 @@
 class RailsAdminSelectize
   constructor: (@$el) ->
+    console.log('FOOOOO', @$el)
+
     @single = false
     @el = @$el[0]
 
@@ -68,4 +70,9 @@ class RailsAdminSelectize
 
 
 $(document).on "rails_admin.dom_ready", ->
-  $('[data-selectize]').each (i, el) -> new RailsAdminSelectize($(el))
+  $('[data-selectize]').each (i, el) ->
+    $select = $(el)
+    unless $select.data('rails_admin_selectize')
+      instance = new RailsAdminSelectize($select)
+      $select.data('rails_admin_selectize', instance)
+
