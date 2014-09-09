@@ -34,6 +34,10 @@ module RailsAdmin
           :form_selectize
         end
 
+        register_instance_option :inline_add do
+          true
+        end
+
         register_instance_option :field_name do
           association.name.to_s.singularize + '_ids'
         end

@@ -9,8 +9,6 @@ class RailsAdminSelectize
 
     @$el.val('')
 
-    console.log('load selectize', @$el.is('[data-preload]'))
-
     @$el.selectize(
       load: $.proxy(@search, this)
       preload: if @preload then 'focus' else false
@@ -66,11 +64,40 @@ class RailsAdminSelectize
     else
       $.each data, (i, item) => @el.selectize.addItem(item.value)
 
+  addAndSelect: (data) ->
+    item = { text: data.label, value: data.id }
+    @el.selectize.addOption(item)
+    @el.selectize.addItem(item.value)
 
-$(document).on "rails_admin.dom_ready", ->
-  $('[data-selectize]').each (i, el) ->
-    $select = $(el)
-    unless $select.data('rails_admin_selectize')
+
+$(document).on "rails_admin.dom_ready", (e, content) ->
+  $selectizes = $('[data-selectize]')
+
+  return unless $selectizes.length
+
+  if content
+    return unless ($content = $(content)).is('form')
+
+    if ($link = $("[data-link='#{ $content.attr('action') }?modal=true']"))
+      $select = $link.closest('.controls').find('[data-selectize]')
+      if (selectize = $select.data('rails_admin_selectize'))
+        console.log "ajax success form", $content, selectize
+        $content.on 'ajax:complete', (xhr, data, status) ->
+          return if status is 'error'
+          selectize.addAndSelect($.parseJSON(data.responseText))
+
+  else
+    $('[data-selectize]').each (i, el) ->
+      $select = $(el)
+
+      return if $select.data('rails_admin_selectize')
+
       instance = new RailsAdminSelectize($select)
       $select.data('rails_admin_selectize', instance)
+
+      # hide link if we already are inside a dialog
+      if $(this).parents("#modal").length
+        $(this).parents('.controls').find('.btn').remove()
+      else
+        $(this).parents('.controls').first().remoteForm()
 

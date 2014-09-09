@@ -60,6 +60,12 @@ rails_admin
     # Allows creating items as tags : Will prompt "Add xxx..." when typing a
     # text that isn't in the search results
     creatable false
+    # Adds a "Create new ASSOCIATED_MODEL_NAME" button after the select control
+    # that shows a modal to create a new item. When validated, it automatically
+    # adds it to the selected items
+    # Works the same as the default Rails Admin select controls with the "Add"
+    # button
+    inline_add false
     # Defines the key used in the field [name] attribute
     field_name :category_ids
     # The URL to search the associated data in. It is generated dynamically and
