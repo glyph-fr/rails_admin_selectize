@@ -43,6 +43,15 @@ class RailsAdminSelectize
 
   processResults: (callback) ->
     (response) =>
+      response = if Object.prototype.toString.call(response) is '[object Array]'
+        response
+      else
+        firstArray = null
+        $.each response, ->
+          firstArray = this
+          false
+        firstArray
+
       callback(response)
 
   dataFor: (query) ->
