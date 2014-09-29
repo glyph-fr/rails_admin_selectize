@@ -1,6 +1,6 @@
 class RailsAdminSelectize
   constructor: (@$el) ->
-    @single = false
+    @single = @$el.data('multi') is false
     @el = @$el[0]
 
     @preload = @$el.data('preload')
@@ -10,6 +10,7 @@ class RailsAdminSelectize
     @$el.val('')
 
     @$el.selectize(
+      mode: if @single then 'single' else 'multi'
       load: $.proxy(@search, this)
       preload: if @preload then 'focus' else false
       sortField: 'text'
@@ -31,8 +32,6 @@ class RailsAdminSelectize
     return callback() unless query.length or @preload
 
     @preload = false if @preload
-
-    console.log('SEARCH')
 
     $.ajax
       url: @$el.data('search-url')

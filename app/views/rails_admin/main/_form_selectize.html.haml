@@ -2,7 +2,7 @@
   config = field.associated_model_config
 
 .controls
-  = form.send field.view_helper, field.field_name, field.html_attributes.reverse_merge({ value: field.field_value, data: { selectize: true, :'search-url' => field.search_url, value: field.serialized_value, :'search-param' => field.search_param, :'preload' => field.preload, creatable: field.creatable, :"add-translation" => t('rails_admin_selectize.add') } })
+  = form.send field.view_helper, field.field_name, field.html_attributes.reverse_merge({ value: field.field_value, data: { selectize: true, :'search-url' => field.search_url, value: field.serialized_value, :'search-param' => field.search_param, :'preload' => field.preload, creatable: field.creatable, multi: field.collection?, :"add-translation" => t('rails_admin_selectize.add') } })
 
   - if authorized?(:new, config.abstract_model) && field.inline_add
     - path_hash = { model_name: config.abstract_model.to_param, modal: true }

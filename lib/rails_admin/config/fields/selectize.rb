@@ -10,7 +10,15 @@ module RailsAdmin
           if relation_name
             bindings[:object].class.reflections[relation_name]
           else
-            @properties
+            @properties.association
+          end
+        end
+
+        def collection?
+          @collection ||= if relation_name
+            bindings[:object].class.reflections[relation_name].collection?
+          else
+            @properties.association.collection?
           end
         end
 
@@ -91,14 +99,25 @@ module RailsAdmin
         end
 
         def field_value
-          form_value.map { |item| item.send(search_value_field) }.join(',')
+          if collection?
+            form_value.map { |item| item.send(search_value_field) }.join(',')
+          else
+            form_value.send(search_value_field)
+          end
         end
 
         def serialized_value
-          form_value.map do |item|
+          if collection?
+            form_value.map do |item|
+              {
+                text: item.send(search_text_field),
+                value: item.send(search_value_field)
+              }
+            end
+          else
             {
-              text: item.send(search_text_field),
-              value: item.send(search_value_field)
+              text: form_value.send(search_text_field),
+              value: form_value.send(search_value_field)
             }
           end
         end
@@ -108,7 +127,7 @@ module RailsAdmin
         end
 
         def parse_input(params)
-          if (value = params[field_name]) && value.is_a?(String)
+          if collection? && (value = params[field_name]) && value.is_a?(String)
             params[field_name] = value.split(',')
           end
         end
