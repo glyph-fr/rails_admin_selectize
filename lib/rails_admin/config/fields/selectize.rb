@@ -47,7 +47,7 @@ module RailsAdmin
         end
 
         register_instance_option :field_name do
-          association.name.to_s.singularize + '_ids'
+          association.name.to_s.singularize + (collection? ? '_ids' : '_id')
         end
 
         register_instance_option :search_url do
@@ -129,6 +129,8 @@ module RailsAdmin
         def parse_input(params)
           if collection? && (value = params[field_name]) && value.is_a?(String)
             params[field_name] = value.split(',')
+          else
+            params[field_name] = value
           end
         end
       end
