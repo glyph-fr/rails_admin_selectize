@@ -102,7 +102,7 @@ module RailsAdmin
           if collection?
             form_value.map { |item| item.send(search_value_field) }.join(',')
           else
-            form_value.send(search_value_field)
+            form_value && form_value.send(search_value_field)
           end
         end
 
@@ -115,7 +115,7 @@ module RailsAdmin
               }
             end
           else
-            {
+            form_value && {
               text: form_value.send(search_text_field),
               value: form_value.send(search_value_field)
             }

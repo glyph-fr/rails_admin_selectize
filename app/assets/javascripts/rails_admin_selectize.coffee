@@ -1,4 +1,6 @@
 class RailsAdminSelectize
+  @clickedSelectizeModalLink = null
+
   constructor: (@$el) ->
     @single = @$el.data('multi') is false
     @el = @$el[0]
@@ -27,6 +29,10 @@ class RailsAdminSelectize
 
     if (value = @$el.data('value'))
       @initializeValue(value)
+
+    $(window).on 'load', =>
+      $btn = @$el.closest('.selectize-field').find('.btn.create')
+      $btn.on('click', => @setAsClicked())
 
   search: (query, callback) ->
     return callback() unless query.length or @preload
@@ -77,6 +83,10 @@ class RailsAdminSelectize
     @el.selectize.addOption(item)
     @el.selectize.addItem(item.value)
 
+  setAsClicked: ->
+    console.log "SET AS CLICKED", this
+    RailsAdminSelectize.clickedSelectizeModalLink = this
+
 
 $(document).on "rails_admin.dom_ready", (e, content) ->
   $selectizes = $('[data-selectize]')
@@ -85,14 +95,14 @@ $(document).on "rails_admin.dom_ready", (e, content) ->
 
   if content
     return unless ($content = $(content)).is('form')
+    return unless (selectize = RailsAdminSelectize.clickedSelectizeModalLink)
+    RailsAdminSelectize.clickedSelectizeModalLink = null
 
-    if ($link = $("[data-link='#{ $content.attr('action') }?modal=true']"))
-      $select = $link.closest('.controls').find('[data-selectize]')
-      if (selectize = $select.data('rails_admin_selectize'))
-        console.log "ajax success form", $content, selectize
-        $content.on 'ajax:complete', (xhr, data, status) ->
-          return if status is 'error'
-          selectize.addAndSelect($.parseJSON(data.responseText))
+    console.log "WAS CLICKED ", selectize
+
+    $content.on 'ajax:complete', (xhr, data, status) ->
+      return if status is 'error'
+      selectize.addAndSelect($.parseJSON(data.responseText))
 
   else
     $('[data-selectize]').each (i, el) ->

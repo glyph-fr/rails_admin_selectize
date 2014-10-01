@@ -1,10 +1,11 @@
 :ruby
   config = field.associated_model_config
+  field_uid = "selectize-#{ (Time.now.to_f * 1000).to_i }-#{ (rand * 1000).to_i }"
 
-.controls
-  = form.send field.view_helper, field.field_name, field.html_attributes.reverse_merge({ value: field.field_value, data: { selectize: true, :'search-url' => field.search_url, value: field.serialized_value, :'search-param' => field.search_param, :'preload' => field.preload, creatable: field.creatable, multi: field.collection?, :"add-translation" => t('rails_admin_selectize.add') } })
+.controls.selectize-field{ class: ('inline_addable' if field.inline_add) }
+  = form.send field.view_helper, field.field_name, field.html_attributes.reverse_merge({ value: field.field_value, id: field_uid, data: { selectize: true, :'search-url' => field.search_url, value: field.serialized_value, :'search-param' => field.search_param, :'preload' => field.preload, creatable: field.creatable, multi: field.collection?, :"add-translation" => t('rails_admin_selectize.add') } })
 
   - if authorized?(:new, config.abstract_model) && field.inline_add
-    - path_hash = { model_name: config.abstract_model.to_param, modal: true }
+    - path_hash = { model_name: config.abstract_model.to_param, modal: true, field_uid: field_uid }
     - path_hash.merge!({ associations: { field.inverse_of => (form.object.persisted? ? form.object.id : 'new') } }) if field.inverse_of
     = link_to "<i class=\"icon-plus icon-white\"></i> ".html_safe + wording_for(:link, :new, config.abstract_model), '#', data: { link: new_path(path_hash) }, class: "create btn btn-info", style: 'margin-left:10px'
